@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+<item android:id="@+id/add" android:icon="@drawable/taskadd" app:showAsAction="always" android:title="add"/>
+    <item android:title="ABOUT" android:id="@+id/about"/>
+    <item android:id="@+id/website" android:title="Google TODOist"/>
+    <item android:id="@+id/call" android:title="Call"/>
+    <item android:id="@+id/sms" android:title="Share App"/>
+    <item android:id="@+id/mail" android:title="Send Mail"/>
+</menu>
