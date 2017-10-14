@@ -32,9 +32,7 @@ public class MainActivity extends AppCompatActivity {
     String description;
     String time;
     String date;
-    FloatingActionButton Add;
-
-
+    int Day,Month,Hour,mins,year;
     public final static int REQUEST_ADD = 2;
     public final static int REQUEST_EDIT = 1;
 
@@ -106,6 +104,11 @@ public class MainActivity extends AppCompatActivity {
                 Intent i = new Intent(MainActivity.this, EditActivity.class);
                 final long Id = Tasks.get(position).getId();
                 i.putExtra(constant.KEY_TODO_ID, Id);
+                i.putExtra("hour",Hour);
+                i.putExtra("min",mins);
+                i.putExtra("month",Month);
+                i.putExtra("day",Day);
+                i.putExtra("year",year);
                 startActivityForResult(i, REQUEST_EDIT);
 
 
@@ -181,6 +184,11 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_ADD) {
             if (resultCode == TaskAdd.ADD_SUCCESS) {
                 long id = data.getLongExtra(KEY_TODO_ID, -1L);
+                Day=data.getIntExtra("day",1);
+                year=data.getIntExtra("year",1);
+                Month= data.getIntExtra("month",1);
+                Hour =data.getIntExtra("hour",1);
+                mins =data.getIntExtra("min",1);
                 if (id > -1) {
                     TodoOpenHelper openHelper = TodoOpenHelper.getInstance(getApplicationContext());
                     SQLiteDatabase db = openHelper.getReadableDatabase();

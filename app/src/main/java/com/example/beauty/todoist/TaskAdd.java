@@ -43,6 +43,7 @@ public class TaskAdd extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_add);
+
         SetTask = (EditText) findViewById(R.id.setTask);
         SetDescription = (EditText) findViewById(R.id.setDescription);
         SetTime = (TextView) findViewById(R.id.settime);
@@ -67,9 +68,11 @@ public class TaskAdd extends AppCompatActivity {
                 showDialog(Time_Id);
             }
         });
+
     }
 
-    public void display_DATE() {
+    public void display_DATE()
+    {
         SetDate.setText(Day + "/" + (Month + 1) + "/" + Year + "");
     }
 
@@ -153,6 +156,11 @@ public class TaskAdd extends AppCompatActivity {
                 long Id = db.insert(Contract.TODO_TABLE_NAME, null, contentValues);
                 Intent result = new Intent();
                 result.putExtra(constant.KEY_TODO_ID, Id);
+                result.putExtra("hour",hours);
+                result.putExtra("min",mins);
+                result.putExtra("month",Month);
+                result.putExtra("day",Day);
+                result.putExtra("year",Year);
                 setResult(ADD_SUCCESS, result);
                 finish();
                 AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -165,6 +173,7 @@ public class TaskAdd extends AppCompatActivity {
 
 
             }
+
 
         }
         return super.onOptionsItemSelected(item);

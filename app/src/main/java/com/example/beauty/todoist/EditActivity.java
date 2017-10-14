@@ -27,7 +27,7 @@ public class EditActivity extends AppCompatActivity {
     EditText editdescription;
     TextView edittime;
     TextView editdate;
-    private int  Day,Year,Month,mins,hours;
+    private int  day,yeaR,month,min,hour;
     static final int Date_Id=0;
     static final int Time_Id=1;
     public static final int EDIT_SUCESS = 0;
@@ -39,14 +39,20 @@ public class EditActivity extends AppCompatActivity {
         editdescription = (EditText) findViewById(R.id.setDescription);
         edittime = (TextView) findViewById(R.id.settime);
         editdate = (TextView) findViewById(R.id.setdate);
-        Day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-        Year = Calendar.getInstance().get(Calendar.YEAR);
-        Month = Calendar.getInstance().get(Calendar.MONTH);
-        mins = Calendar.getInstance().get(Calendar.MINUTE);
-        hours = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-
-        Intent i = getIntent();
-        long id = i.getLongExtra(constant.KEY_TODO_ID, -1L);
+        Intent i=getIntent();
+        hour=i.getIntExtra("hour",60);
+        min=i.getIntExtra("min",60);
+        day=i.getIntExtra("day",1);
+        month=i.getIntExtra("month",1);
+        yeaR=i.getIntExtra("year",1);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH,day);
+        calendar.set(Calendar.YEAR,yeaR);
+        calendar.set(Calendar.MONTH,month);
+        calendar.set(Calendar.HOUR_OF_DAY,hour);
+        calendar.set(Calendar.MINUTE,min);
+        Intent intent = getIntent();
+        long id = intent.getLongExtra(constant.KEY_TODO_ID, -1L);
         if (id > -1) {
             TodoOpenHelper openHelper = TodoOpenHelper.getInstance(getApplicationContext());
             SQLiteDatabase db = openHelper.getReadableDatabase();
@@ -81,21 +87,21 @@ public class EditActivity extends AppCompatActivity {
                 });
             }
     public void display_DATE(){
-        editdate.setText(Day+"/"+(Month+1)+"/"+Year+"");
+        editdate.setText(day+"/"+(month+1)+"/"+yeaR+"");
     }
     public void display_TIME(){
-         int hour = hours % 12;
-          if (hour == 0)
-            hour = 12;
-        edittime.setText(String.format("%02d:%02d %s", hour, mins,hours<12?"am":"pm"));
+         int hours = hour % 12;
+          if (hours == 0)
+            hours = 12;
+        edittime.setText(String.format("%02d:%02d %s", hours, min,hour<12?"am":"pm"));
     }
     private DatePickerDialog.OnDateSetListener mDate=
             new DatePickerDialog.OnDateSetListener() {
                 @Override
-                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                    Month = month;
-                    Year = year;
-                    Day = dayOfMonth;
+                public void onDateSet(DatePicker view, int year, int Month, int dayOfMonth) {
+                    month = Month;
+                    yeaR = year;
+                    day = dayOfMonth;
                     display_DATE();
                 }
             };
@@ -103,8 +109,8 @@ public class EditActivity extends AppCompatActivity {
             new TimePickerDialog.OnTimeSetListener(){
                 @Override
                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                    mins=minute;
-                    hours=hourOfDay;
+                    min=minute;
+                    hour=hourOfDay;
                     display_TIME();
                 }
             };
@@ -113,9 +119,9 @@ public class EditActivity extends AppCompatActivity {
     protected Dialog onCreateDialog(int id) {
         switch(id) {
             case Date_Id:
-                return new DatePickerDialog(this,mDate,Year,Month,Day);
+                return new DatePickerDialog(this,mDate,yeaR,month,day);
             case Time_Id:
-                return new TimePickerDialog(this,mTime,hours,mins,false);
+                return new TimePickerDialog(this,mTime,hour,min,false);
         }
         return null;
     }
@@ -130,14 +136,19 @@ public class EditActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id=item.getItemId();
         if(id==R.id.editsave){
-            Calendar calendar = Calendar.getInstance();
             Calendar current = Calendar.getInstance();
-            calendar.set(Calendar.DAY_OF_MONTH, Day);
-            calendar.set(Calendar.MONTH, Month);
-            calendar.set(Calendar.YEAR, Year);
-            calendar.set(Calendar.HOUR_OF_DAY, hours);
-            calendar.set(Calendar.MINUTE, mins);
-            calendar.set(Calendar.SECOND,0);
+            current.get(Calendar.DAY_OF_MONTH);
+            current.get(Calendar.YEAR);
+            current.get(Calendar.MONTH);
+            current.get(Calendar.HOUR_OF_DAY);
+            current.get(Calendar.MINUTE);
+            Calendar cal= Calendar.getInstance();
+            cal.set(Calendar.DAY_OF_MONTH, day);
+            cal.set(Calendar.MONTH, month);
+            cal.set(Calendar.YEAR, yeaR);
+            cal.set(Calendar.HOUR_OF_DAY, hour);
+            cal.set(Calendar.MINUTE, min);
+            cal.set(Calendar.SECOND,0);
             String Task= edittask.getText().toString();
             String Description = editdescription.getText().toString();
             String Date=editdate.getText().toString();
@@ -148,7 +159,7 @@ public class EditActivity extends AppCompatActivity {
             else if(Description.matches("")){
                 Toast.makeText(this,"Enter the Task Description",Toast.LENGTH_LONG).show();
             }
-            else if (calendar.compareTo(current) <= 0) {
+            else if (cal.compareTo(current) <= 0) {
                 Toast.makeText(this, "Date or Time is Expired", Toast.LENGTH_LONG).show();
             } else {
                 Intent i=getIntent();
@@ -172,7 +183,7 @@ public class EditActivity extends AppCompatActivity {
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(this,(int)ID,alarmIntent,PendingIntent.FLAG_UPDATE_CURRENT);
                 alarmManager.cancel(pendingIntent);
                 Log.i("work","alarm cancel");
-                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pendingIntent);
                 Log.i("ALARM SET", "RING");
 
 
